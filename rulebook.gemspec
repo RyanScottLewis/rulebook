@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rulebook}
-  s.version = "0.1.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ryan Lewis"]
@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "lib/rulebook.rb",
-     "test.rb",
+     "rulebook.gemspec",
      "test/helper.rb",
      "test/test_chevy.rb",
      "test/test_ryguy.rb",
