@@ -5,16 +5,17 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rulebook}
-  s.version = "0.1.1"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ryan Lewis"]
-  s.date = %q{2010-04-25}
+  s.date = %q{2010-04-27}
   s.description = %q{Lets you define methods with regex for dynamic methods}
   s.email = %q{c00lryguy@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
-     "README.md"
+     "README.md",
+     "TODO"
   ]
   s.files = [
     ".document",
@@ -22,11 +23,13 @@ Gem::Specification.new do |s|
      "LICENSE",
      "README.md",
      "Rakefile",
+     "TODO",
      "VERSION",
      "lib/rulebook.rb",
      "rulebook.gemspec",
      "test/helper.rb",
      "test/test_chevy.rb",
+     "test/test_class_methods.rb",
      "test/test_ryguy.rb",
      "test/test_user.rb"
   ]
@@ -38,6 +41,7 @@ Gem::Specification.new do |s|
   s.test_files = [
     "test/helper.rb",
      "test/test_chevy.rb",
+     "test/test_class_methods.rb",
      "test/test_ryguy.rb",
      "test/test_user.rb"
   ]
