@@ -24,8 +24,10 @@ class RuleBook
         @rules = []
     end
     
-    def add_rule(what_to_capture, &block)
-        @rules << Rule.new(what_to_capture, &block)
+    def rule(what_to_capture, &block)
+        rule = Rule.new(what_to_capture, &block)
+        @rules << rule
+        rule
     end
     
     def find_rules_that_match_against(query)
@@ -34,40 +36,55 @@ class RuleBook
 end
 
 class RuleBook
-    # Provides the ClassMethods and InstanceMethods modules that get mixed into
-    # the class that #follows_rules is called in
-    module Mixin
-        module ClassMethods
-            def rule(what_to_capture, &block)
-                rulebook = const_get('RULEBOOK')
-                rulebook.add_rule(what_to_capture, &block)
+    module InstanceMethods
+        def method_missing(meth, *args, &blk)
+            rulebook = self.class.const_get('INSTANCE_RULEBOOK')
+            rules = rulebook.find_rules_that_match_against(meth)
+            
+            unless rules.nil?
+                rules.first.tap do |rule|
+                    match = rule.match_against(meth)
+                    instance_exec(*match.captures, *args, &rule.block)
+                end 
+            else
+                super
             end
         end
-        
-        module InstanceMethods
-            def method_missing(meth, *args, &blk)
-                rulebook = self.class.const_get('RULEBOOK')
-                rules = rulebook.find_rules_that_match_against(meth)
-                
-                unless rules.nil?
-                    rules.first.tap do |rule|
-                        match = rule.match_against(meth)
-                        instance_exec(*match.captures, *args, &rule.block)
-                    end 
-                else
-                    super
-                end
+
+    end
+    module ClassMethods
+        def method_missing(meth, *args, &blk)
+            rulebook = const_get('CLASS_NOTEBOOK')
+            rules = rulebook.find_rules_that_match_against(meth)
+            
+            unless rules.nil?
+                rules.first.tap do |rule|
+                    match = rule.match_against(meth)
+                    class_exec(*match.captures, *args, &rule.block)
+                end 
+            else
+                super
             end
         end
     end
 end
 
 class Module
-    # Mixes in RuleBook::Mixin::ClassMethods and RuleBook::Mixin::InstanceMethods
-    # TODO: allow argument to use other RuleBook instances.. also multiple rulebooks
-    def follows_rules
-        const_set('RULEBOOK', RuleBook.new)
-        extend RuleBook::Mixin::ClassMethods
-        include RuleBook::Mixin::InstanceMethods
+    def rules(&blk)
+        unless const_defined('INSTANCE_RULEBOOK') do
+            const_set('INSTANCE_RULEBOOK', RuleBook.new)
+            include RuleBook::InstanceMethods
+        end
+        
+        const_get('INSTANCE_RULEBOOK').instance_eval(&blk)
+    end
+    
+    def class_rules(&blk)
+        unless const_defined('CLASS_NOTEBOOK') do
+            const_set('CLASS_NOTEBOOK', RuleBook.new)
+            include RuleBook::ClassMethods
+        end
+        
+        const_get('CLASS_NOTEBOOK').instance_eval(&blk)
     end
 end
