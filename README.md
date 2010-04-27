@@ -27,7 +27,7 @@ The format has changed since version 0.1.1. Check out the example below:
         end
     end
     
-    User.new('Ryan').say_hello_world # => "Ryan says 'hello world'"
+    User.new('Ryan').say_hello_world # => Ryan says 'hello world'
 
 ## How It Works
 
@@ -77,6 +77,8 @@ You can now do things like
 
 ## Class Methods Example
 
+    require 'rulebook'
+    
     class Car
         attr :make, :model
         
@@ -97,25 +99,22 @@ You can now do things like
         Car.new_volkswagen_beetle
     ]
     
-    my_cars.first.make # => "Honda"
-    my_cars.first.model # => "Accord"
+    p my_cars.first.make # => "Honda"
+    p my_cars.first.model # => "Accord"
 
 ### Now lets add some instance rules
 
     class Car
         rules do
             rule /is_(.+)\?/ do |make_or_model|
-                if @make == make_or_model || @model == make_or_model
-                    true
-                else
-                    false
-                end
+                make_or_model.capitalize!
+                @make == make_or_model || @model == make_or_model
             end
         end
     end
-    
-    my_cars.first.is_honda? # => true
-    my_cars.first.is_beetle? # => false
+
+    p my_cars.first.is_honda? # => true
+    p my_cars.first.is_beetle? # => false
 
 #### There are more examples in the examples and [test][1] directories and [Rubular][2] is a great place to test your Regexp.
 
