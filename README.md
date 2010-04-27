@@ -85,7 +85,7 @@ You can now do things like
         end
         
         class_rules do
-            rule(/new_([a-z]+)_(.+)/) do |make, model|
+            rule /new_([a-z]+)_(.+)/ do |make, model|
                 new(make, model)
             end
         end
@@ -98,7 +98,24 @@ You can now do things like
     ]
     
     my_cars.first.make # => "Honda"
-    my_cars.first.model # => "Honda"
+    my_cars.first.model # => "Accord"
+
+### Now lets add some instance rules
+
+    class Car
+        rules do
+            rule /is_(.+)\?/ do |make_or_model|
+                if @make == make_or_model || @model == make_or_model
+                    true
+                else
+                    false
+                end
+            end
+        end
+    end
+    
+    my_cars.first.is_honda? # => true
+    my_cars.first.is_beetle? # => false
 
 #### There are more examples in the examples and [test][1] directories and [Rubular][2] is a great place to test your Regexp.
 
