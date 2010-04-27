@@ -7,7 +7,34 @@ Allows you to define a set of 'rules' or dynamic methods to apply to a class
     > gem update --system
     > gem install rulebook
 
-## Example
+## How It Works
+
+When you apply the `follows_rules` method to a class, it does three things:
+
+* Creates the constant `RULEBOOK` in the class that contains a new RuleBook instance
+* Extends the class with a `rule` method that allows you to define new rules to RULEBOOK. 
+  This method takes one argument (must be Regexp) and a block which passes the Regexp's captures
+* Overwrites the class's `method_missing?` method to try to match the currently called method against the rules in RULEBOOK.
+
+## Simple Example
+
+    require 'rulebook'
+    
+    class User
+        follows_rules
+        
+        def initialize(name)
+            @name = name
+        end
+        
+        rule /say_(.+)/ do |what_to_say|
+            puts what_to_say.gsub(/_/, ' ')
+        end
+    end
+    
+    User.new('Ryan').say_hello_world
+
+## Better Example
 
     require 'rulebook'
     
@@ -44,7 +71,9 @@ You can now do things like
         puts "#{user.name} is a #{user.title}"
     end
 
-There are more examples in the example directory and easy to understand tests in the tests directory
+There are more examples in the examples and [test][1] directories.
+
+[Rubular][2] if a great place to test your Regexp.
 
 ## Note on Patches/Pull Requests
  
@@ -59,3 +88,7 @@ There are more examples in the example directory and easy to understand tests in
 ## Copyright
 
 Copyright (c) 2010 Ryan Lewis. See LICENSE for details.
+
+
+[1]: http://github.com/c00lryguy/rulebook/tree/master/test/
+[2]: http://rubular.com/

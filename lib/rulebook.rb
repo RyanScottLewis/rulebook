@@ -66,7 +66,8 @@ class Module
     # Mixes in RuleBook::Mixin::ClassMethods and RuleBook::Mixin::InstanceMethods
     # TODO: allow argument to use other RuleBook instances.. also multiple rulebooks
     def follows_rules
-        const_set('RULEBOOK', RuleBook.new)
+        const_set('RULEBOOK_CLASS', RuleBook.new)
+        const_set('RULEBOOK_INSTANCE', RuleBook.new)
         extend RuleBook::Mixin::ClassMethods
         include RuleBook::Mixin::InstanceMethods
     end
