@@ -42,7 +42,6 @@ class RuleBook
             rules = rulebook.find_rules_that_match_against(meth)
             
             unless rules.nil?
-                raise(ArgumentError, 'rules must have a block') unless block_given?
                 rule = rules.first
                 match = rule.match_against(meth)
                 instance_exec(*match.captures, *args, &rule.block)
@@ -58,7 +57,6 @@ class RuleBook
             rules = rulebook.find_rules_that_match_against(meth)
             
             unless rules.nil?
-                raise(ArgumentError, 'rules must have a block') unless block_given?
                 rule = rules.first
                 match = rule.match_against(meth)
                 class_exec(*match.captures, *args, &rule.block)
@@ -71,6 +69,7 @@ end
 
 class Module
     def rules(&blk)
+        raise(ArgumentError, 'rules must have a block') unless block_given?
         unless const_defined?('INSTANCE_RULEBOOK')
             const_set('INSTANCE_RULEBOOK', RuleBook.new)
             include RuleBook::InstanceMethods
@@ -80,6 +79,7 @@ class Module
     end
     
     def class_rules(&blk)
+        raise(ArgumentError, 'class_rules must have a block') unless block_given?
         unless const_defined?('CLASS_NOTEBOOK')
             const_set('CLASS_NOTEBOOK', RuleBook.new)
             extend RuleBook::ClassMethods

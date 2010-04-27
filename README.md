@@ -1,4 +1,4 @@
-# rulebook (0.2.0)
+# rulebook
 
 Allows you to define a set of 'rules' or dynamic methods to apply to a class.
 
