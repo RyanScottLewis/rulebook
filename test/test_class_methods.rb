@@ -5,9 +5,10 @@ class TestChevy < Test::Unit::TestCase
         class << self
             follows_rules
             
-            rule(/new_(.+)_(.+)/) do |make, model|
+            rule(/new_([a-z]+)_(.+)/) do |make, model|
                 make.capitalize!
                 model.capitalize!
+                model.gsub!(/_/, ' ')
                 new(make, model)
             end
         end
@@ -18,12 +19,17 @@ class TestChevy < Test::Unit::TestCase
     end
 
     should 'be a Ford F150' do
-        car = Car.new_ford_f150
-        assert @chevy.state_is?('off')
     end
 
     should 'be a Ford Mustang' do
-        car = Car.new_ford_f150
-        assert @chevy.state_is?('off')
+    end
+    
+    should 'be a Pontiac GTO' do
+    end
+    
+    should 'be a Toyota Camry' do
+    end
+    
+    should 'be a Hyundai Santa Fe' do
     end
 end
