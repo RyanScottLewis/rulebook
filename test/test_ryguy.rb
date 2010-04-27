@@ -2,17 +2,18 @@ require 'helper'
 
 class TestRyguy < Test::Unit::TestCase
     class Ryguy
-        follows_rules
         attr :nouns, :adjectives
         
-        rule(/is_a_(.*)/) do |noun|
-            @nouns ||= []
-            @nouns << noun.gsub(/_/, ' ')
-        end
-        
-        rule(/is_(.*)/) do |adjective|
-            @adjectives ||= []
-            @adjectives << adjective.gsub(/_/, ' ')
+        rules do
+            rule(/is_a_(.*)/) do |noun|
+                @nouns ||= []
+                @nouns << noun.gsub(/_/, ' ')
+            end
+            
+            rule(/is_(.*)/) do |adjective|
+                @adjectives ||= []
+                @adjectives << adjective.gsub(/_/, ' ')
+            end
         end
     end
     

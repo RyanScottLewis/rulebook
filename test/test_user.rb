@@ -3,24 +3,25 @@ require 'date'
 
 class TestUser < Test::Unit::TestCase
     class User
-        follows_rules
         attr :gender, :height, :eye_color, :date_of_birth, :age
         
-        rule(/is_(male|female)/) do |gender|
-            @gender = gender.to_sym
-        end
-        
-        rule(/is_(\d+)_foot_(\d+)(_inches)?/) do |feet, inches|
-            @height = "#{feet}-#{inches}"
-        end
-        
-        rule(/has_(amber|blue|brown|gray|grey|green|hazel|red)_eyes/) do |eye_color|
-            @eye_color = eye_color.to_sym
-        end
-        
-        rule(/was_born_([a-z]+_\d+(st|nd|rd|th)_\d+)/) do |date_of_birth|
-            @date_of_birth = Date.parse(date_of_birth.gsub(/_/, ' '))
-            @age = (Date.today - @date_of_birth).to_i / 365
+        rules do
+            rule(/is_(male|female)/) do |gender|
+                @gender = gender.to_sym
+            end
+            
+            rule(/is_(\d+)_foot_(\d+)(_inches)?/) do |feet, inches|
+                @height = "#{feet}-#{inches}"
+            end
+            
+            rule(/has_(amber|blue|brown|gray|grey|green|hazel|red)_eyes/) do |eye_color|
+                @eye_color = eye_color.to_sym
+            end
+            
+            rule(/was_born_([a-z]+_\d+(st|nd|rd|th)_\d+)/) do |date_of_birth|
+                @date_of_birth = Date.parse(date_of_birth.gsub(/_/, ' '))
+                @age = (Date.today - @date_of_birth).to_i / 365
+            end
         end
     end
     

@@ -42,26 +42,24 @@ class RuleBook
             rules = rulebook.find_rules_that_match_against(meth)
             
             unless rules.nil?
-                rules.first.tap do |rule|
-                    match = rule.match_against(meth)
-                    instance_exec(*match.captures, *args, &rule.block)
-                end 
+                rule = rules.first
+                match = rule.match_against(meth)
+                instance_exec(*match.captures, *args, &rule.block)
             else
                 super
             end
         end
-
     end
+    
     module ClassMethods
         def method_missing(meth, *args, &blk)
             rulebook = const_get('CLASS_NOTEBOOK')
             rules = rulebook.find_rules_that_match_against(meth)
             
             unless rules.nil?
-                rules.first.tap do |rule|
-                    match = rule.match_against(meth)
-                    class_exec(*match.captures, *args, &rule.block)
-                end 
+                rule = rules.first
+                match = rule.match_against(meth)
+                class_exec(*match.captures, *args, &rule.block)
             else
                 super
             end
@@ -71,7 +69,7 @@ end
 
 class Module
     def rules(&blk)
-        unless const_defined('INSTANCE_RULEBOOK') do
+        unless const_defined?('INSTANCE_RULEBOOK')
             const_set('INSTANCE_RULEBOOK', RuleBook.new)
             include RuleBook::InstanceMethods
         end
@@ -80,9 +78,9 @@ class Module
     end
     
     def class_rules(&blk)
-        unless const_defined('CLASS_NOTEBOOK') do
+        unless const_defined?('CLASS_NOTEBOOK')
             const_set('CLASS_NOTEBOOK', RuleBook.new)
-            include RuleBook::ClassMethods
+            extend RuleBook::ClassMethods
         end
         
         const_get('CLASS_NOTEBOOK').instance_eval(&blk)

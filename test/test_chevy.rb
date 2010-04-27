@@ -2,15 +2,16 @@ require 'helper'
 
 class TestChevy < Test::Unit::TestCase
     class Engine
-        follows_rules
         attr :state
         
         def initialize
             @state = "off"
         end
         
-        rule(/is_(.*)/) do |state|
-            @state = state.gsub(/_/, " ")
+        rules do
+            rule(/is_(.*)/) do |state|
+                @state = state.gsub(/_/, " ")
+            end
         end
     end
 
@@ -43,8 +44,10 @@ class TestChevy < Test::Unit::TestCase
         setup do
             @chevy = Engine.new
             class << @chevy
-                rule(/is_(.*)?/) do |state|
-                    @state == state
+                rules do
+                    rule(/is_(.*)?/) do |state|
+                        @state == state
+                    end
                 end
             end
         end
