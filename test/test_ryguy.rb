@@ -2,7 +2,7 @@ require 'helper'
 
 class TestRyguy < Test::Unit::TestCase
     class Ryguy
-        attr :nouns, :adjectives
+        attr_accessor :nouns, :adjectives
         
         rules do
             rule(/is_a_(.*)/) do |noun|
