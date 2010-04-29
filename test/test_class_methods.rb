@@ -2,7 +2,7 @@ require 'helper'
 
 class TestClassMethods < Test::Unit::TestCase
     class Car
-        attr :make, :model
+        attr_accessor :make, :model
         
         def initialize(make, model)
             @make, @model = make, model

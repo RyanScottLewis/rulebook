@@ -2,7 +2,7 @@ require 'helper'
 
 class TestChevy < Test::Unit::TestCase
     class Engine
-        attr :state
+        attr_accessor :state
         
         def initialize
             @state = "off"
