@@ -3,7 +3,9 @@ class RuleBook
         attr :what_to_capture, :block
         
         def initialize(what_to_capture, &block)
-            raise(TypeError, 'what_to_capture must be of type Regexp') unless what_to_capture.is_a?(Regexp)
+            raise(TypeError, 'what_to_capture must be of type Regexp') \
+                unless what_to_capture.is_a?(Regexp)
+                
             @what_to_capture, @block = what_to_capture, block
         end
         
@@ -36,12 +38,12 @@ class RuleBook
 end
 
 class RuleBook
-    module InstanceMethods
-        def method_missing(meth, *args, &blk)
+    module IncludeMethods
+        def method_missing(meth, *args, &block)
             rulebook = self.class.const_get('INSTANCE_RULEBOOK')
             rules = rulebook.find_rules_that_match_against(meth)
             
-            unless rules.nil?
+            unless rules.nil? || rules.empty?
                 rule = rules.first
                 match = rule.match_against(meth)
                 instance_exec(*match.captures, *args, &rule.block)
@@ -51,8 +53,8 @@ class RuleBook
         end
     end
     
-    module ClassMethods
-        def method_missing(meth, *args, &blk)
+    module ExtendMethods
+        def method_missing(meth, *args, &block)
             rulebook = const_get('CLASS_NOTEBOOK')
             rules = rulebook.find_rules_that_match_against(meth)
             
@@ -68,23 +70,47 @@ class RuleBook
 end
 
 class Module
-    def rules(&blk)
+    def rule(what_to_capture, &block)
         raise(ArgumentError, 'rules must have a block') unless block_given?
-        unless const_defined?('INSTANCE_RULEBOOK')
-            const_set('INSTANCE_RULEBOOK', RuleBook.new)
-            include RuleBook::InstanceMethods
-        end
         
-        const_get('INSTANCE_RULEBOOK').instance_eval(&blk)
+        setup_rulebook('INSTANCE_RULEBOOK', :include)
+        const_get('INSTANCE_RULEBOOK').rule(what_to_capture, &block)
     end
     
-    def class_rules(&blk)
+    def class_rule(what_to_capture, &block)
         raise(ArgumentError, 'class_rules must have a block') unless block_given?
-        unless const_defined?('CLASS_NOTEBOOK')
-            const_set('CLASS_NOTEBOOK', RuleBook.new)
-            extend RuleBook::ClassMethods
-        end
         
-        const_get('CLASS_NOTEBOOK').instance_eval(&blk)
+        setup_rulebook('CLASS_NOTEBOOK', :extend)
+        const_get('CLASS_NOTEBOOK').rule(what_to_capture, &block)
+    end
+    
+    def rules(&block)
+        raise(ArgumentError, 'rules must have a block') unless block_given?
+        
+        setup_rulebook('INSTANCE_RULEBOOK', :include)
+        const_get('INSTANCE_RULEBOOK').instance_eval(&block)
+        const_get('INSTANCE_RULEBOOK')
+    end
+    
+    def class_rules(&block)
+        raise(ArgumentError, 'class_rules must have a block') unless block_given?
+        
+        setup_rulebook('CLASS_NOTEBOOK', :extend)
+        const_get('CLASS_NOTEBOOK').instance_eval(&block)
+        const_get('CLASS_NOTEBOOK')
+    end
+    
+    private
+    
+    def setup_rulebook(rulebook_constant, extend_or_include)
+        raise(ArgumentError, 'extend_or_include must be :extend or :include') \
+            unless [:extend, :include].include?(extend_or_include)
+            
+        unless const_defined?(rulebook_constant)
+            const_set(rulebook_constant, RuleBook.new)
+            
+            module_name = extend_or_include.to_s.capitalize + 'Methods'
+            send(extend_or_include, RuleBook.const_get(module_name))
+        end
     end
 end

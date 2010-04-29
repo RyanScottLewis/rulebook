@@ -8,5 +8,5 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'rulebook'
 
 class Test::Unit::TestCase
-    
+
 end

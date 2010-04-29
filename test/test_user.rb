@@ -1,15 +1,18 @@
 require 'helper'
 require 'date'
-
+    
 class TestUser < Test::Unit::TestCase
+
     class User
-        attr :gender, :height, :eye_color, :date_of_birth, :age
+        attr_accessor :name, :gender, :height, :eye_color, :date_of_birth, :age
+    end
+
+    class User
+        rule(/is_(male|female)/) do |gender|
+            @gender = gender.to_sym
+        end
         
         rules do
-            rule(/is_(male|female)/) do |gender|
-                @gender = gender.to_sym
-            end
-            
             rule(/is_(\d+)_foot_(\d+)(_inches)?/) do |feet, inches|
                 @height = "#{feet}-#{inches}"
             end
@@ -24,7 +27,7 @@ class TestUser < Test::Unit::TestCase
             end
         end
     end
-    
+
     context 'A User instance' do
         setup do
             @ryguy = User.new

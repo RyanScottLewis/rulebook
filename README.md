@@ -9,7 +9,7 @@ Allows you to define a set of 'rules' or dynamic methods to apply to a class.
 
 ## _Notice_
 
-The format has changed since version 0.1.1. Check out the example below:
+The format is _back_ to what it was before 0.2.2!
 
 ## Simple Example
 
@@ -20,10 +20,8 @@ The format has changed since version 0.1.1. Check out the example below:
             @name = name
         end
         
-        rules do
-            rule /say_(.+)/ do |what_to_say|
-                puts "#{@name} says '#{what_to_say.gsub(/_/, ' ')}'"
-            end
+        rule /say_(.+)/ do |what_to_say|
+            puts "#{@name} says '#{what_to_say.gsub(/_/, ' ')}'"
         end
     end
     
@@ -49,10 +47,8 @@ There is also a method called `class_rules` which does the same as rules does, o
             @title = :user
         end
         
-        rules do
-            rule /is_(admin|moderator|super_user|user)/ do |title|
-                @title = title.to_sym
-            end
+        rule /is_(admin|moderator|super_user|user)/ do |title|
+            @title = title.to_sym
         end
     end
     
@@ -86,10 +82,8 @@ You can now do things like
             @make, @model = make.capitalize, model.capitalize
         end
         
-        class_rules do
-            rule /new_([a-z]+)_(.+)/ do |make, model|
-                new(make, model)
-            end
+        class_rule /new_([a-z]+)_(.+)/ do |make, model|
+            new(make, model)
         end
     end
     
@@ -105,16 +99,34 @@ You can now do things like
 ### Now lets add some instance rules
 
     class Car
-        rules do
-            rule /is_(.+)\?/ do |make_or_model|
-                make_or_model.capitalize!
-                @make == make_or_model || @model == make_or_model
-            end
+        rule /is_(.+)\?/ do |make_or_model|
+            make_or_model.capitalize!
+            @make == make_or_model || @model == make_or_model
         end
     end
 
     p my_cars.first.is_honda? # => true
     p my_cars.first.is_beetle? # => false
+
+## Using outside of class block
+
+Since `rule` and `class_rule` are both class methods,
+you can call them all outside of a class block:
+
+    Car.rule(...){}
+    Car.class_rule(...){}
+
+Since 0.2 you can call the class methods `rules` and `class_rules` to wrap your rules in a block:
+
+    Car.rules do
+        rule(...){}
+    end
+    
+    Car.class_rules do
+        rule(...){}
+    end
+    
+The result is exactly the same.
 
 #### There are more examples in the examples and [test][1] directories and [Rubular][2] is a great place to test your Regexp.
 
