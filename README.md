@@ -29,11 +29,11 @@ The format is _back_ to what it was before 0.2.2!
 
 ## How It Works
 
-When you call the `rules` method in a class, it defines the constant `INSTANCE_RULEBOOK` and sets it to a new `RuleBook` instance; but only if the constant wasn't already defined. This way, it only defines the constant the first time you call the `rules` method.
+When you call the `rule` method in a class, it defines the constant `INSTANCE_RULEBOOK` and sets it to a new `RuleBook` instance; but only if the constant wasn't already defined. This way, it only defines the constant the first time you call the `rule` method.
 
-When the first time `rules` is called in a class, we also include the `RuleBook::InstanceMethods` module which overrides the classes `method_missing`. So when you call an undefined method on your class's instance, we will try to match the method against the rules you've defined in `INSTANCE_RULEBOOK`.
+When the first time `rule` is called in a class, we also include the `RuleBook::IncludeMethods` module which overrides the classes `method_missing`. So when you call an undefined method on your class's instance, we will try to match the method against the rules you've defined in `INSTANCE_RULEBOOK`.
 
-There is also a method called `class_rules` which does the same as rules does, only it defines the `CLASS_RULEBOOK` constance in the class; which is a different `RuleBook` instance. The first time `class_rules` is called, it extends the class with the `RuleBook::ClassMethods` module, which also contains a `method_missing` method.
+There is also a method called `class_rule` which does the same as rules does, only it defines the `CLASS_RULEBOOK` constance in the class; which is a different `RuleBook` instance. The first time `class_rules` is called, it extends the class with the `RuleBook::ExtendMethods` module, which also contains a `method_missing` method.
 
 ## Better Example
 
@@ -126,7 +126,16 @@ Since 0.2 you can call the class methods `rules` and `class_rules` to wrap your 
         rule(...){}
     end
     
-The result is exactly the same.
+The result is exactly the same. These are also callable from inside the class.
+
+    class Car
+        rules do
+            rule(...){}
+        end
+        class_rules do
+            rule(...){}
+        end
+    end
 
 #### There are more examples in the examples and [test][1] directories and [Rubular][2] is a great place to test your Regexp.
 
