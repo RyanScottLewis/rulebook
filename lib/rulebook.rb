@@ -46,7 +46,7 @@ class RuleBook
             unless rules.nil? || rules.empty?
                 rule = rules.first
                 match = rule.match_against(meth)
-                instance_exec(*(match.captures + args)[0...rule.block.arity], &rule.block)
+                instance_exec(*(match.captures||[] + args)[0...rule.block.arity], &rule.block)
             else
                 super
             end
@@ -61,7 +61,7 @@ class RuleBook
             unless rules.nil?
                 rule = rules.first
                 match = rule.match_against(meth)
-                class_exec(*(match.captures + args)[0...rule.block.arity], &rule.block)
+                class_exec(*(match.captures||[] + args)[0...rule.block.arity], &rule.block)
             else
                 super
             end
