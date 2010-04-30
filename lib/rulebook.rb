@@ -45,8 +45,13 @@ class RuleBook
             
             unless rules.nil? || rules.empty?
                 rule = rules.first
-                match = rule.match_against(meth)
-                instance_exec(*(match.captures||[] + args)[0...rule.block.arity], &rule.block)
+                captures = rule.match_against(meth).captures || []
+                block = rule.block
+                arity = block.arity
+                self.class.send(:define_method, meth) do |*args|
+                  instance_exec(*(captures + args).take(arity), &block)
+                end 
+                send(meth, *args, &block)
             else
                 super
             end
@@ -60,8 +65,14 @@ class RuleBook
             
             unless rules.nil?
                 rule = rules.first
-                match = rule.match_against(meth)
-                class_exec(*(match.captures||[] + args)[0...rule.block.arity], &rule.block)
+                captures = rule.match_against(meth).captures || []
+                block = rule.block
+                arity = block.arity == -1 ? 0 : block.arity
+                klass = class << self; self; end
+                klass.send(:define_method, meth) do |*args|
+                  class_exec(*(captures + args).take(arity), &block)
+                end 
+                send(meth, *args, &block)
             else
                 super
             end
