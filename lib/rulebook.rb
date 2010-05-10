@@ -1,18 +1,19 @@
 class RuleBook  
   class Rule
-    attr_accessor :what_to_capture, :block
+    attr :block
     
     def initialize(what_to_capture, &block)
       raise(TypeError, 'what_to_capture must be of type Regexp') unless what_to_capture.is_a?(Regexp)
       @what_to_capture, @block = what_to_capture, block
     end
     
-    def matches_against?(query)
-      !match_against(query).nil?
-    end
-    
-    def match_against(query)
+    def [](query)
       query.to_s.match(@what_to_capture)
+    end
+    alias_method :match_against, :[]
+    
+    def matches_against?(query)
+      !self[query].nil?
     end
   end
 end
@@ -30,30 +31,42 @@ class RuleBook
     rule
   end
   
-  def find_rules_that_match_against(query)
-    @rules.find_all { |rule| !query.to_s.match(rule.what_to_capture).nil? }
+  def rules_that_match_against(regexp)
+    @rules.find_all { |rule| rule.matches_against?(regexp) }
   end
 end
 
+# TODO: DRY up the code here a bit...
 class RuleBook
   module IncludeMethods
     def respond_to?(meth)
       rulebook = self.class.const_get('INSTANCE_RULEBOOK')
-      rulebook.find_rules_that_match_against(meth).any? || super
+      rulebook.rules_that_match_against(meth).any? || super
     end 
     
     def method_missing(meth, *args, &block)
       rulebook = self.class.const_get('INSTANCE_RULEBOOK')
-      rules = rulebook.find_rules_that_match_against(meth)
+      rules = rulebook.rules_that_match_against(meth)
       
+      # TODO: Why would this ever be nil?
       unless rules.nil? || rules.empty?
-        rule = rules.first
-        captures = rule.match_against(meth).captures || []
+        # Run the first matched rule..
+        # TODO: if the method NEXT if called within the rule, 
+        #       then goto the next matched rule
+        rule = rules.first 
+        captures = rule[meth].captures || []
         block = rule.block
+        
+        # Remove the possibility of optional arguments
         arity = block.arity == -1 ? 0 : block.arity
-        self.class.send(:define_method, meth) do |*args|
+        
+        # Define the method
+        klass = self.class
+        klass.send(:define_method, meth) do |*args|
           instance_exec(*(captures + args).take(arity), &block)
         end 
+        
+        # Call the method
         send(meth, *args, &block)
       else
         super
@@ -64,22 +77,32 @@ class RuleBook
   module ExtendMethods
     def respond_to?(meth)
       rulebook = const_get('CLASS_NOTEBOOK')
-      rulebook.find_rules_that_match_against(meth).any? || super
+      rulebook.rules_that_match_against(meth).any? || super
     end 
     
     def method_missing(meth, *args, &block)
       rulebook = const_get('CLASS_NOTEBOOK')
-      rules = rulebook.find_rules_that_match_against(meth)
+      rules = rulebook.rules_that_match_against(meth)
       
-      unless rules.nil?
-        rule = rules.first
-        captures = rule.match_against(meth).captures || []
+      # TODO: Why would this ever be nil?
+      unless rules.nil? || rules.empty?
+        # Run the first matched rule..
+        # TODO: if the method NEXT if called within the rule, 
+        #       then goto the next matched rule
+        rule = rules.first 
+        captures = rule[meth].captures || []
         block = rule.block
+        
+        # Remove the possibility of optional arguments
         arity = block.arity == -1 ? 0 : block.arity
+        
+        # Define the method
         klass = class << self; self; end
         klass.send(:define_method, meth) do |*args|
           class_exec(*(captures + args).take(arity), &block)
         end 
+        
+        # Call the method
         send(meth, *args, &block)
       else
         super
@@ -88,6 +111,7 @@ class RuleBook
   end
 end
 
+# TODO: DRY up the code here too...
 class Module
   def rule(what_to_capture, &block)
     raise(ArgumentError, 'rules must have a block') unless block_given?
