@@ -1,68 +1,63 @@
 require 'helper'
 
-class RuleBook  
-  class Rule
-    attr :block
-    
-    def initialize(what_to_capture, &block)
-      raise(TypeError, 'what_to_capture must be of type Regexp') unless what_to_capture.is_a?(Regexp)
-      @what_to_capture, @block = what_to_capture, block
-    end
-    
-    def [](query)
-      query.to_s.match(@what_to_capture)
-    end
-    alias_method :match_against, :[]
-    
-    def matches_against?(query)
-      !self[query].nil?
-    end
-  end
-end
-
-class RuleBook
-  attr_accessor :rules
-  
-  def initialize
-    @rules = []
-  end
-  
-  def rule(what_to_capture, &block)
-    rule = Rule.new(what_to_capture, &block)
-    @rules << rule
-    rule
-  end
-  
-  def rules_that_match_against(regexp)
-    @rules.find_all { |rule| rule.matches_against?(regexp) }
-  end
-end
-
 describe RuleBook do
+  before do
+    @rule_book = RuleBook.new
+  end
+  
   it 'initialized correctly' do
-    rule_book = Rulebook.new
-    rule_book.rules.empty?.should == true
+    @rule_book.rules.empty?.should == true
+  end
+  
+  it 'should respond_to #rules_that_match_against' do
+    @rule_book.respond_to?(:rules_that_match_against).should == true
   end
   
   context 'adding rules' do
-    rule_book = Rulebook.new
-    MyModel.should_receive(:find).with(id).and_return(@mock_model_instance)
-
+    it 'creates a rule using #rule' do
+      @rule_book.respond_to?(:rule).should == true
+      
+      @rule_book.rule(/is_(red|green|blue)/) {}
+      
+      @rule_book.rules_that_match_against(:is_red).length.should == 1
+      @rule_book.rules_that_match_against(:is_green).length.should == 1
+      @rule_book.rules_that_match_against(:is_blue).length.should == 1
+      
+      @rule_book.rules_that_match_against(:is_yellow).length.should == 0
+      @rule_book.rules_that_match_against(:is_purple).length.should == 0
+      @rule_book.rules_that_match_against(:is_brown).length.should == 0
+    end
+    
+    it 'creates a rule using #rules' do
+      @rule_book.should_receive(:rules)
+      
+      @rule_book.rules do
+        rule(/is_(red|green|blue)/) {}
+      end
+      
+      @rule_book.rules_that_match_against(:is_red).length.should == 1
+      @rule_book.rules_that_match_against(:is_green).length.should == 1
+      @rule_book.rules_that_match_against(:is_blue).length.should == 1
+      
+      @rule_book.rules_that_match_against(:is_yellow).length.should == 0
+      @rule_book.rules_that_match_against(:is_purple).length.should == 0
+      @rule_book.rules_that_match_against(:is_brown).length.should == 0
+    end
   end
 
-  context "transfering money" do
-    it "deposits transfer amount to the other account" do
-      source = Account.new(50, :USD)
-      target = mock('target account')
-      target.should_receive(:deposit).with(Money.new(5, :USD))
-      source.transfer(5, :USD).to(target)
-    end
+  # context "transfering money" do
+    # it "deposits transfer amount to the other account" do
+      # source = Account.new(50, :USD)
+      # target = mock('target account')
+      # target.should_receive(:deposit).with(Money.new(5, :USD))
+      # source.transfer(5, :USD).to(target)
+    # end
 
-    it "reduces its balance by the transfer amount" do
-      source = Account.new(50, :USD)
-      target = stub('target account')
-      source.transfer(5, :USD).to(target)
-      source.balance.should == Money.new(45, :USD)
-    end
-  end
+    # it "reduces its balance by the transfer amount" do
+      # source = Account.new(50, :USD)
+      # target = stub('target account')
+      # source.transfer(5, :USD).to(target)
+      # source.balance.should == Money.new(45, :USD)
+    # end
+  # end
 end

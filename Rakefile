@@ -7,8 +7,9 @@ require 'rake'
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |t|
+  t.libs.concat ['lib', 'test']
   t.pattern = 'test/**/test_*.rb'
-  t.verbose = true
+  t.verbose = false
 end
 task :test => :check_dependencies
 # task :default => :test
@@ -19,8 +20,9 @@ task :test => :check_dependencies
 
 require 'spec/rake/spectask'
 Spec::Rake::SpecTask.new(:spec) do |t|
+  t.libs.concat ['lib', 'test']
   t.spec_files = FileList['spec/**/spec_*.rb']
-  t.verbose = true
+  t.verbose = false
 end
 
 #==================#
