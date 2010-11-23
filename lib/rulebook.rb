@@ -1,4 +1,6 @@
-class RuleBook  
+class RuleBook
+  # This class creates an instance of a Rule, which holds the
+  # Regexp to match against and the block to run when matched
   class Rule
     attr :block
     
@@ -27,9 +29,7 @@ class RuleBook
   end
   
   def rule(what_to_capture, &block)
-    rule = Rule.new(what_to_capture, &block)
-    @rules << rule
-    rule
+    @rules.push( Rule.new(what_to_capture, &block) ).last
   end
   
   def rules_that_match_against(query)
