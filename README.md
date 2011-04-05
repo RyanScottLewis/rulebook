@@ -1,4 +1,4 @@
-# rulebook
+# rulebook ![](http://stillmaintained.com/c00lryguy/dsl.png)
 
 Allows you to define a set of 'rules' or dynamic methods to apply to a class.
 
