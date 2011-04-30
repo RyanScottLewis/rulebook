@@ -9,6 +9,8 @@ class Rulebook
       raise(TypeError, 'what_to_capture must be of type Regexp') unless what_to_capture.is_a?(Regexp)
       raise(ArgumentError, 'a block is needed') unless block_given?
 
+      
+      
       @what_to_capture, @block = what_to_capture, block
     end
     

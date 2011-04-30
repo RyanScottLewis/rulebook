@@ -10,13 +10,20 @@ class User
     @title = title
   end
 
-  rulebook.add /is_(admin|user)/ do |title|
+  rulebook.add /^is_(admin|user)$/ do |title|
     @title = title.to_sym
     self
   end
 
-  rulebook.add /is_(admin|user)\?/ do |title|
+  rulebook.add /^is_(admin|user)\?$/ do |title|
     @title == title.to_sym
+  end
+
+  class << self
+    follows_the_rules!
+    rulebook.add /^new_(admin|user)$/ do |title|
+      new.instance_eval { @title = title }
+    end
   end
 end
 
@@ -28,4 +35,7 @@ p u.is_admin? # => false
 u.is_admin
 
 p u.is_user?  # => false
+p u.is_admin? # => true
+
+u = User.new_admin
 p u.is_admin? # => true
