@@ -1,5 +1,6 @@
 GEM
   specs:
+    meta_tools (0.1.0)
     rake (0.8.7)
     riot (0.12.3)
       rr
@@ -9,5 +10,6 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
+  meta_tools
   rake
   riot

@@ -1,3 +1,4 @@
+gem 'meta_tools'
 
 group :development do
   gem 'rake'

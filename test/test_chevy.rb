@@ -1,18 +1,20 @@
 require 'helper'
 
 class Engine
+  follows_the_rules!
+  
   attr_accessor :state
   
   def initialize
     @state = :off
   end
 
-  rule(/is_(off|idle|broken)/) do |state|
+  rulebook.add(/is_(off|idle|broken)/) do |state|
     @state = state.to_sym
     self
   end
 
-  rule(/is_(off|idle|broken)\?/) do |state|
+  rulebook.add(/is_(off|idle|broken)\?/) do |state|
     @state == state.to_sym
   end
 end
