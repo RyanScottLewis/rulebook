@@ -20,8 +20,8 @@ class User
   end
 
   class << self
-    metaclass.follows_the_rules!
-    metaclass.rulebook.add /^new_(admin|user)$/ do |title|
+    follows_the_rules!
+    rulebook.add /^new_(admin|user)$/ do |title|
       instance = new
       instance.instance_eval { @title = title.to_sym }
       instance
@@ -41,3 +41,15 @@ p u.is_admin? # => true
 
 u = User.new_admin
 p u.is_admin? # => true
+
+
+
+
+Integer.follows_the_rules!
+Integer.rulebook.add /to_base_(\d+)/ do |base|
+  p base
+  p "OMG"
+  to_s(base)
+end
+
+p 10.to_base_16

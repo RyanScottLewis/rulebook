@@ -27,7 +27,19 @@ Allows you to define a set of 'rules' or dynamic methods to apply to a class.
 
 ## How It Works
 
-TODO
+When we call class method `follows_the_rules!` in a class, we do the following:
+
+* `extend MetaClass`
+* `include MetaClass`
+* `extend Rulebook::ClassMethods`
+* `include Rulebook::InstanceMethods`
+
+This adds the class method `rulebook`, which when called creates a new 
+`Rulebook` instance the first time but _refers_ to all following times.
+
+Since we `include Rulebook::InstanceMethods` which has a `method_missing` method 
+defined in it, we check our rulebook for matching rules when `method_missing` is 
+called and call the matching rules (if they exist).
 
 ## Better Example
 
@@ -88,15 +100,15 @@ You can now do things like
     p my_cars.first.make # => "Honda"
     p my_cars.first.model # => "Accord"
 
-This works out if you already have ``
-
 ### Now lets add some instance rules
 
     class Car
-        rule /is_(.+)\?/ do |make_or_model|
-            make_or_model.capitalize!
-            @make == make_or_model || @model == make_or_model
-        end
+      follows_the_rules!
+      
+      rulebook.add /is_(.+)\?/ do |make_or_model|
+        make_or_model.capitalize!
+        @make == make_or_model || @model == make_or_model
+      end
     end
 
     p my_cars.first.is_honda? # => true
@@ -104,32 +116,10 @@ This works out if you already have ``
 
 ## Using outside of class block
 
-Since `rule` and `class_rule` are both class methods,
-you can call them all outside of a class block:
+Since `rulebook` is a class method, you can easily define rules outside 
+of classes:
 
-    Car.rule(...){}
-    Car.class_rule(...){}
 
-Since 0.2 you can call the class methods `rules` and `class_rules` to wrap your rules in a block:
-
-    Car.rules do
-        rule(...){}
-    end
-    
-    Car.class_rules do
-        rule(...){}
-    end
-    
-The result is exactly the same. These are also callable from inside the class.
-
-    class Car
-        rules do
-            rule(...){}
-        end
-        class_rules do
-            rule(...){}
-        end
-    end
 
 #### There are more examples in the examples and [test][1] directories and [Rubular][2] is a great place to test your Regexp.
 
