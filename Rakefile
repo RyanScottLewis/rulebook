@@ -1,5 +1,10 @@
 require 'rubygems'
 
+# Gay as hell jeweler workaround
+
+require 'psych'
+YAML::ENGINE.yamler = 'psych'
+
 require 'bundler'
 begin
   Bundler.setup(:default, :development)
