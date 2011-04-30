@@ -1,5 +1,10 @@
 GEM
   specs:
+    git (1.2.5)
+    jeweler (1.5.2)
+      bundler (~> 1.0.0)
+      git (>= 1.2.5)
+      rake
     meta_tools (0.1.0)
     rake (0.8.7)
     riot (0.12.3)
@@ -10,6 +15,7 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
+  jeweler
   meta_tools
   rake
   riot
