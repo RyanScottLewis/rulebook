@@ -1,6 +1,7 @@
 class Rulebook
   module InstanceMethods
     def method_missing(meth, *args, &blk)
+      # Classes and instances find their rulebook differently.
       begin
         rulebook = self.class.rulebook
       rescue NoMethodError
@@ -20,10 +21,14 @@ class Rulebook
           arity = block.arity == -1 ? 0 : block.arity
 
           # Define the method
-          klass = self.class
-          klass.send(:define_method, meth) do |*args|
+          meta_def(meth) do |*args|
             instance_exec(*(captures + args).take(arity), &block)
           end 
+
+          # klass = self.class
+          # klass.send(:define_method, meth) do |*args|
+          #   instance_exec(*(captures + args).take(arity), &block)
+          # end 
         
           # Call the method and return the result
           return send(meth, *args, &block)

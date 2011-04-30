@@ -11,10 +11,9 @@ end
 require 'riot'
 
 # Stupid non-colored Windows terminal
-
 class Riot::IOReporter
-  def red(msg); msg; end
-  def green(msg); msg; end
+  def red(msg);    msg; end
+  def green(msg);  msg; end
   def yellow(msg); msg; end
 end
 

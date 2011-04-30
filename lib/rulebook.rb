@@ -8,19 +8,10 @@ require 'rulebook/rule'
 
 class Rulebook
   attr_accessor :rules
-  
-  def initialize
-    @rules = []
-  end
-  
-  def add(what_to_capture, &block)
-    # @rules.push( Rule.new(what_to_capture, &block) ).last
-    @rules << Rule.new(what_to_capture, &block)
-  end
-  
-  def rules_that_match_against(query)
-    @rules.find_all { |rule| rule.matches_against?(query) }
-  end
+  def initialize; @rules = []; end
+  def add(what_to_capture, &block); @rules << Rule.new(what_to_capture, &block); end
+  def [](query); @rules.find_all { |rule| rule.matches_against?(query) }; end
+  alias_method :rules_that_match_against, :[]
 end
 
 require 'rulebook/class_methods'
