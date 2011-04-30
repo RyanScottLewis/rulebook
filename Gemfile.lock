@@ -1,0 +1,13 @@
+GEM
+  specs:
+    rake (0.8.7)
+    riot (0.12.3)
+      rr
+    rr (1.0.2)
+
+PLATFORMS
+  x86-mingw32
+
+DEPENDENCIES
+  rake
+  riot

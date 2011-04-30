@@ -1,69 +1,54 @@
 require 'helper'
 
-class TestChevy < Test::Unit::TestCase
-    class Engine
-        attr_accessor :state
-        
-        def initialize
-            @state = "off"
-        end
-        
-        rules do
-            rule(/is_(.*)/) do |state|
-                @state = state.gsub(/_/, " ")
-            end
-        end
+class Engine
+  attr_accessor :state
+  
+  def initialize
+    @state = :off
+  end
+
+  rule(/is_(off|idle|broken)/) do |state|
+    @state = state.to_sym
+    self
+  end
+
+  rule(/is_(off|idle|broken)\?/) do |state|
+    @state == state.to_sym
+  end
+end
+
+context "A Chevy engine" do
+  setup { Engine.new }
+
+  context "that is off" do
+    asserts_topic.assigns(:state, :off)
+    asserts(:state).equals(:off)
+  end
+
+  context "that is idle" do
+    setup { topic.is_idle }
+    asserts_topic.assigns(:state, :idle)
+    asserts(:state).equals(:idle)
+  end
+
+  context "that is broken as usual" do
+    setup { topic.is_broken }
+    asserts_topic.assigns(:state, :broken)
+  end
+
+  context "checked with custom rule" do
+    context "that is off" do
+      asserts(:is_off?)
     end
 
-    context 'A Chevy engine checked with #state_is?' do
-        setup do
-            @chevy = Engine.new
-            class << @chevy
-                def state_is?(state)
-                    @state == state
-                end
-            end
-        end
-        
-        should 'be off' do
-            assert @chevy.state_is?('off')
-        end
-        
-        should 'be idling' do
-            @chevy.is_idling
-            assert @chevy.state_is?('idling')
-        end
-        
-        should 'be broken as usual' do
-            @chevy.is_broken_as_usual
-            assert @chevy.state_is?('broken as usual')
-        end
+    context "that is idle" do
+      setup { topic.is_idle }
+      asserts(:is_idle?)
     end
-    
-    context 'A Chevy engine checked with custom rule' do
-        setup do
-            @chevy = Engine.new
-            class << @chevy
-                rules do
-                    rule(/is_(.*)?/) do |state|
-                        @state == state
-                    end
-                end
-            end
-        end
-        
-        should 'be off' do
-            assert @chevy.is_off?
-        end
-        
-        should 'be idling' do
-            @chevy.is_idling
-            assert @chevy.is_idling?
-        end
-        
-        should 'be broken as usual' do
-            @chevy.is_broken_as_usual
-            assert @chevy.is_broken_as_usual?
-        end
+
+    context "that is broken as usual" do
+      setup { topic.is_broken }
+      asserts(:is_broken?)
     end
-end
+  end
+end 
