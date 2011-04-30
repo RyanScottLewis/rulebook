@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
     "lib/rulebook/core_ext/module.rb",
     "lib/rulebook/instance_methods.rb",
     "lib/rulebook/rule.rb",
+    "rulebook.gemspec",
     "test/helper.rb",
     "test/test_chevy.rb",
     "test/test_rule.rb"
