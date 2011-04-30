@@ -2,6 +2,7 @@ require 'meta_tools'
 
 #++
 # Should this be class Object?
+# Is there really a difference?
 #--
 class Module
   # This declares that the current class has a rulebook 
@@ -15,6 +16,8 @@ class Module
   #     Returns the RuleBook instance that contains the defined rules. 
   def follows_the_rules!
     extend(MetaTools)
+    include(MetaTools)
+    
     extend(Rulebook::ClassMethods)
     include(Rulebook::InstanceMethods)
   end

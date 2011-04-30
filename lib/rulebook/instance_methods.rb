@@ -1,9 +1,18 @@
 class Rulebook
   module InstanceMethods
     def method_missing(meth, *args, &blk)
-      rules = self.class.rulebook.rules_that_match_against(meth)
+      begin
+        rulebook = self.class.rulebook
+      rescue NoMethodError
+        rulebook = metaclass.rulebook
+      end
+
+      rules = rulebook.rules_that_match_against(meth)
       unless rules.nil?
         rules.each do |rule|
+          # =S Run all matched rules or run first matched rule...?
+          # rule = rules.first
+
           captures = rule[meth].captures || []
           block = rule.block
         

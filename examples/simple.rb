@@ -22,7 +22,9 @@ class User
   class << self
     follows_the_rules!
     rulebook.add /^new_(admin|user)$/ do |title|
-      new.instance_eval { @title = title }
+      instance = new
+      instance.instance_eval { @title = title.to_sym }
+      instance
     end
   end
 end

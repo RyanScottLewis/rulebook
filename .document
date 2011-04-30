@@ -1,5 +1,5 @@
 README.md
 lib/**/*.rb
 bin/*
-features/**/*.feature
+test/**/*.rb
 LICENSE
