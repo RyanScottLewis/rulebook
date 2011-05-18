@@ -43,8 +43,7 @@ u = User.new_admin
 p u.is_admin? # => true
 
 
-
-
+# DEV: TODO CLASS RULES O_O
 Integer.follows_the_rules!
 Integer.rulebook.add /to_base_(\d+)/ do |base|
   p base
