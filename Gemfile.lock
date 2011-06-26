@@ -1,21 +1,23 @@
-GEM
+PATH
+  remote: .
   specs:
-    git (1.2.5)
-    jeweler (1.5.2)
-      bundler (~> 1.0.0)
-      git (>= 1.2.5)
-      rake
-    meta_tools (0.1.0)
-    rake (0.8.7)
-    riot (0.12.3)
+    rulebook (0.4.1)
+      meta_tools (= 0.2.1)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    meta_tools (0.2.1)
+    rake (0.9.2)
+    riot (0.12.4)
       rr
     rr (1.0.2)
 
 PLATFORMS
+  ruby
   x86-mingw32
 
 DEPENDENCIES
-  jeweler
-  meta_tools
-  rake
-  riot
+  rake (= 0.9.2)
+  riot (= 0.12.4)
+  rulebook!
