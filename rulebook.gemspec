@@ -51,4 +51,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency("riot", "0.12.4")
   s.add_development_dependency("rspec", "2.6.0")
   s.add_development_dependency("shoulda", "2.11.3")
+  s.add_development_dependency("mocha", "0.9.12")
 end
