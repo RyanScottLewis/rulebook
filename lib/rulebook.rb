@@ -18,10 +18,10 @@ class Rulebook
   end
   
   def [](query)
-    @rules.find_all { |rule| rule.matches_against?(query) }
+    @rules.find_all { |rule| rule.matches?(query) }
   end
-  
   alias_method :rules_that_match_against, :[]
+  alias_method :match, :[]
 end
 
 require 'rulebook/class_methods'

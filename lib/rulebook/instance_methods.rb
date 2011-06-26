@@ -9,30 +9,26 @@ class Rulebook
       end
 
       rules = rulebook.rules_that_match_against(meth)
+      
+      pp rules
+      
       unless rules.nil?
-        rules.each do |rule|
-          # =S Run all matched rules or run first matched rule...?
-          # rule = rules.first
-
-          captures = rule[meth].captures || []
-          block = rule.block
+        # The first defined rule that matches the method is run
+        rule = rules.first
         
-          # Remove the possibility of optional arguments
-          arity = block.arity == -1 ? 0 : block.arity
+        captures = rule[meth].captures || []
+        block = rule.block
+      
+        # Remove the possibility of optional arguments
+        arity = block.arity == -1 ? 0 : block.arity
 
-          # Define the method
-          meta_def(meth) do |*args|
-            instance_exec(*(captures + args).take(arity), &block)
-          end 
-
-          # klass = self.class
-          # klass.send(:define_method, meth) do |*args|
-          #   instance_exec(*(captures + args).take(arity), &block)
-          # end 
-        
-          # Call the method and return the result
-          return send(meth, *args, &block)
-        end
+        # Define the method
+        meta_def(meth) do |*args|
+          instance_exec(*(captures + args).take(arity), &block)
+        end 
+      
+        # Call the method and return the result
+        return send(meth, *args, &block)
       else
         super
       end

@@ -40,6 +40,7 @@ p u.is_user?  # => false
 p u.is_admin? # => true
 
 u = User.new_admin
+p u
 p u.is_admin? # => true
 
 

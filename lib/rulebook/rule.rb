@@ -15,9 +15,11 @@ class Rulebook
       query.to_s.downcase.match(@what_to_capture)
     end
     alias_method :match_against, :[]
+    alias_method :match, :[]
     
     def matches_against?(query)
       !self[query].nil?
     end
+    alias_method :matches?, :matches_against?
   end
 end
