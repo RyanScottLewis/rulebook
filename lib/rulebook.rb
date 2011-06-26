@@ -4,9 +4,30 @@ class Rulebook
   VERSION = "0.4.3"
 end
 
-require 'rulebook/rule'
-
 class Rulebook
+  
+  class Rule
+    attr :block
+    
+    def initialize(what_to_capture, &block)
+      # TODO: Match more than Regexp. Strings and Symbols pls.
+      raise(TypeError, 'what_to_capture must be of type Regexp') unless what_to_capture.is_a?(Regexp)
+      raise(ArgumentError, 'a block is needed') unless block_given?
+      @what_to_capture, @block = what_to_capture, block
+    end
+    
+    def [](query)
+      query.to_s.downcase.match(@what_to_capture)
+    end
+    alias_method :match_against, :[]
+    alias_method :match, :[]
+    
+    def matches_against?(query)
+      !self[query].nil?
+    end
+    alias_method :matches?, :matches_against?
+  end
+  
   attr_accessor :rules
   
   def initialize
@@ -24,6 +45,5 @@ class Rulebook
   alias_method :match, :[]
 end
 
-require 'rulebook/class_methods'
 require 'rulebook/instance_methods'
 require 'core_ext'
