@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   # and use it in here
   
   # Add directories you *might* use in ALL projects.
-  s.files = [File.basename(__FILE__)] + Dir['lib/**/*'] + Dir['bin/**/*'] + Dir['test/**/*'] + Dir['examples/**/*']
+  s.files = [File.basename(__FILE__)] + Dir['lib/**/*'] + Dir['bin/**/*'] + Dir['test/**/*'] + Dir['examples/**/*'] + Dir['spec/**/*']
   
   # Add files you *might* use in ALL projects!
   %W{Gemfile.lock README.* README Rakefile VERSION LICENSE}.each do |file|
@@ -44,9 +44,11 @@ Gem::Specification.new do |s|
     end
   end
   
-  s.test_files = Dir['test/**/*'] + Dir['examples/**/*']
+  s.test_files = Dir['test/**/*'] + Dir['examples/**/*'] + Dir['spec/**/*']
   
   s.add_dependency("meta_tools", "0.2.3")
   s.add_development_dependency("rake", "0.9.2")
   s.add_development_dependency("riot", "0.12.4")
+  s.add_development_dependency("rspec", "2.6.0")
+  s.add_development_dependency("shoulda", "2.11.3")
 end

@@ -1,9 +1,5 @@
 require 'meta_tools'
 
-#++
-# Should this be class Object?
-# Is there really a difference?
-#--
 class Module
   # This declares that the current class has a rulebook 
   # with rules that it wants it's instances to follow.

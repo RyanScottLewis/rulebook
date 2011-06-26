@@ -11,8 +11,13 @@ class Rulebook
       @what_to_capture, @block = what_to_capture, block
     end
     
-    def [](query); query.to_s.downcase.match(@what_to_capture); end
+    def [](query)
+      query.to_s.downcase.match(@what_to_capture)
+    end
     alias_method :match_against, :[]
-    def matches_against?(query); !self[query].nil?; end
+    
+    def matches_against?(query)
+      !self[query].nil?
+    end
   end
 end
