@@ -2,9 +2,6 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 class Rulebook
   VERSION = "0.4.3"
-end
-
-class Rulebook
   
   class Rule
     attr :block

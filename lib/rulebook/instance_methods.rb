@@ -10,7 +10,6 @@ class Rulebook
 
       rules = rulebook.rules_that_match_against(meth)
       
-      pp rules
       
       unless rules.nil?
         # The first defined rule that matches the method is run

@@ -8,6 +8,7 @@ class Module
   # 'follows_the_rules!' (with a bang) is slim... hopefully.
   def follows_the_rules!
     extend(MetaTools)
+    include(MetaTools)
     meta_def(:rulebook) do
       @rulebook ||= Rulebook.new
     end

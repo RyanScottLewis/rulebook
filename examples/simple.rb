@@ -21,6 +21,7 @@ class User
 
   class << self
     follows_the_rules!
+    
     rulebook.add /^new_(admin|user)$/ do |title|
       instance = new
       instance.instance_eval { @title = title.to_sym }
