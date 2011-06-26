@@ -1,13 +1,13 @@
 PATH
   remote: .
   specs:
-    rulebook (0.4.1)
-      meta_tools (= 0.2.1)
+    rulebook (0.4.3)
+      meta_tools (= 0.2.3)
 
 GEM
   remote: http://rubygems.org/
   specs:
-    meta_tools (0.2.1)
+    meta_tools (0.2.3)
     rake (0.9.2)
     riot (0.12.4)
       rr

@@ -46,7 +46,7 @@ Gem::Specification.new do |s|
   
   s.test_files = Dir['test/**/*'] + Dir['examples/**/*']
   
-  s.add_dependency("meta_tools", "0.2.1")
+  s.add_dependency("meta_tools", "0.2.3")
   s.add_development_dependency("rake", "0.9.2")
   s.add_development_dependency("riot", "0.12.4")
 end

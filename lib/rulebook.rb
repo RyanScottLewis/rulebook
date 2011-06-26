@@ -1,7 +1,7 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 class Rulebook
-  VERSION = "0.4.0"
+  VERSION = "0.4.3"
 end
 
 require 'rulebook/rule'
