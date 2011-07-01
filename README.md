@@ -19,29 +19,13 @@ class User
     @name = name
   end
   
-  rulebook.add /say_(.+)/ do |what_to_say|
+  def_rule(/say_(.+)/) do |what_to_say|
     puts "#{@name} says '#{what_to_say.gsub(/_/, ' ')}'"
   end
 end
 
 User.new('Ryan').say_hello_world # => Ryan says 'hello world'
 ```
-
-## How It Works
-
-When we call class method `follows_the_rules!` in a class, we do the following:
-
-* `extend MetaClass`
-* `include MetaClass`
-* `extend Rulebook::ClassMethods`
-* `include Rulebook::InstanceMethods`
-
-This adds the class method `rulebook`, which when called creates a new 
-`Rulebook` instance the first time but _refers_ to all following times.
-
-Since we `include Rulebook::InstanceMethods` which has a `method_missing` method 
-defined in it, we check our rulebook for matching rules when `method_missing` is 
-called and call the matching rules (if they exist).
 
 ## Better Example
 

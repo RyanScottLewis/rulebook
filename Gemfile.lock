@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rulebook (0.4.3)
+    rulebook (0.5.0)
       meta_tools (= 0.2.3)
 
 GEM

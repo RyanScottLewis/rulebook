@@ -1,28 +1,27 @@
-$LOAD_PATH.unshift(File.dirname(__FILE__))
+__DIR__ = File.dirname(__FILE__)
+$:.unshift(__DIR__) unless $:.include?(__DIR__)
 
 class Rulebook
-  VERSION = "0.4.3"
+  VERSION = "0.5.0"
   
   class Rule
     attr :block
     
-    def initialize(what_to_capture, &block)
+    def initialize(regexp, &block)
       # TODO: Match more than Regexp. Strings and Symbols pls.
-      raise(TypeError, 'what_to_capture must be of type Regexp') unless what_to_capture.is_a?(Regexp)
+      raise(TypeError, 'regexp must be of type Regexp') unless regexp.is_a?(Regexp)
       raise(ArgumentError, 'a block is needed') unless block_given?
-      @what_to_capture, @block = what_to_capture, block
+      @regexp, @block = regexp, block
     end
     
     def [](query)
-      query.to_s.downcase.match(@what_to_capture)
+      query.to_s.downcase.match(@regexp)
     end
-    alias_method :match_against, :[]
     alias_method :match, :[]
     
-    def matches_against?(query)
+    def matches?(query)
       !self[query].nil?
     end
-    alias_method :matches?, :matches_against?
   end
   
   attr_accessor :rules
@@ -31,9 +30,10 @@ class Rulebook
     @rules = []
   end
   
-  def add(what_to_capture, &block)
-    @rules << Rule.new(what_to_capture, &block)
+  def add(regexp, &block)
+    @rules << Rule.new(regexp, &block)
   end
+  # alias_method :<<. :add
   
   def [](query)
     @rules.find_all { |rule| rule.matches?(query) }
@@ -42,5 +42,10 @@ class Rulebook
   alias_method :match, :[]
 end
 
-require 'rulebook/instance_methods'
+require 'meta_tools'
+# TODO: implement within meta_tools
+module MetaTools
+  def meta_class; metaclass; end
+end
+
 require 'core_ext'
