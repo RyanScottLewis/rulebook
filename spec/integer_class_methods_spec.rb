@@ -2,8 +2,6 @@ require 'spec_helper'
 
 Integer.follows_the_rules!
 Integer.def_rule /^to_base_(\d+)$/ do |base|
-  p base
-  p "OMG"
   to_s(base)
 end
 
