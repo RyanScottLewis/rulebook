@@ -75,8 +75,8 @@ rulebook.match("testing") # => [#<Rule:0x0eb6>]
 rulebook["testing"] # => [#<Rule:0x0eb6>]
 ```
 
-`follows_the_rules!`
---------------------
+follows_the_rules!
+------------------
 
 When you `require 'rulebook'`, we automatically define a method within `Module`
 named `follows_the_rules!`.  
@@ -110,8 +110,8 @@ p User.methods.grep(/follows|def_/) # => ["follows_the_rules!", "def_rule", "def
 If you would like to have all `Objects` to have the `def_rule` and `def_rule` to avoid
 calling `follows_the_rules!` so much, require `'rulebook/import'` instead of `'rulebook'`.
 
-`def_rule`
-----------
+def_rule
+--------
 
 When you define a rule on a class using `def_rule` the first time, we will add an instance variable to the class 
 named `@rulebook` that contains an instance of `Rulebook`. We then define the rule within that rulebook instance.
@@ -147,8 +147,8 @@ p user.foobar # => "FOOBAR"
 p user.methods - Object.new.methods # => [:foo, :foobar]
 ```
 
-`def_class_rule`
-----------------
+def_class_rule
+--------------
 
 `def_class_rule` works in much the same way as `def_rule`, except on the class.  
 Here's a small example if `def_class_rule` in action:
