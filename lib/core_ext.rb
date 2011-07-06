@@ -11,7 +11,7 @@ class Module
     meta_def(:def_class_rule) do |what_to_capture, &class_block|
 
       class_eval { @rulebook ||= Rulebook.new }.add(what_to_capture, &class_block)
-
+      
       # unless respond_to?(:method_missing)
         meta_def(:method_missing) do |meth, *args, &block|
 
@@ -21,13 +21,13 @@ class Module
             rule = matching_rules.first
             rule_block = rule.block
             rule_captures = rule[meth].captures || []
-            rule_arity = rule_block.arity == -1 ? 0 : rule_block.arity
+            #rule_arity = rule_block.arity == -1 ? 0 : rule_block.arity
             # The above removes the possibility of optional arguments
 
             # Define the method
             unless meta_class.respond_to?(meth)
               meta_def(meth) do |*rule_args|
-                rule_args = (rule_captures + rule_args).take(rule_arity)
+                rule_args = (rule_captures + rule_args)#.take(rule_arity)
                 instance_exec(*rule_args, &rule_block)
               end
             end
@@ -49,20 +49,19 @@ class Module
 
       # unless respond_to?(:method_missing)
         define_method(:method_missing) do |meth, *args, &block|
-
           matching_rules = self.class.instance_variable_get(:@rulebook)[meth] 
 
           unless matching_rules.empty?
             rule = matching_rules.first
             rule_block = rule.block
             rule_captures = rule[meth].captures || []
-            rule_arity = rule_block.arity == -1 ? 0 : rule_block.arity
+            # rule_arity = rule_block.arity == -1 ? 0 : rule_block.arity
             # The above removes the possibility of optional arguments
 
             # Define the method
             unless meta_class.respond_to?(meth)
               meta_def(meth) do |*rule_args|
-                rule_args = (rule_captures + rule_args).take(rule_arity)
+                rule_args = (rule_captures + rule_args)#.take(rule_arity)
                 instance_exec(*rule_args, &rule_block)
               end
             end

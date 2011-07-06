@@ -107,9 +107,6 @@ User.follows_the_rules!
 p User.methods.grep(/follows|def_/) # => ["follows_the_rules!", "def_rule", "def_class_rule"]
 ```
 
-If you would like to have all `Objects` to have the `def_rule` and `def_rule` to avoid
-calling `follows_the_rules!` so much, require `'rulebook/import'` instead of `'rulebook'`.
-
 def_rule
 --------
 
