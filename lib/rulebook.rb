@@ -43,9 +43,4 @@ class Rulebook
 end
 
 require 'meta_tools'
-# TODO: implement within meta_tools
-module MetaTools
-  def meta_class; metaclass; end
-end
-
 require 'core_ext'
