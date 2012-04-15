@@ -95,7 +95,7 @@ end
 p User.methods.grep(/follows|def_/) # => ["follows_the_rules!", "def_rule", "def_class_rule"]
 ```
 
-This is to ensures that only the Objects that you _want_ to follow rules will have these methods available.  
+This ensures that only the Objects that you _want_ to follow rules will have these methods available.  
 You may call `follows_the_rules!` Outside of the class as well:
 
 ```ruby
