@@ -162,7 +162,7 @@ class User
   end
   
   def initialize
-    @role = user
+    @role = :user
   end
   
   def role=(new_role)
